@@ -11,16 +11,16 @@ from scipy import misc
 hcl.init(init_dtype=hcl.Float())
 
 #specify width and height of the input image
-width = 225
-height = 225
+height = 900#225
+width = 1200#225
 
 #need to define placeholders to define kernel and create schedule
-data = hcl.placeholder((width, height, 3), "data", dtype=hcl.Float())
+data = hcl.placeholder((height, width, 3), "data", dtype=hcl.Float())
 Gx = hcl.placeholder((3,3), "Gx", dtype=hcl.Float())
 Gy = hcl.placeholder((3,3), "Gy", dtype=hcl.Float())
 
 #path to input image
-path = 'spongebob.png'
+path = 'lane.png'#'spongebob.png'
 
 #need to convert all input data to hcl arrays
 imgdata = hcl.asarray(np.asarray(misc.imread(path)))
@@ -29,21 +29,21 @@ Gydata = hcl.asarray(np.array([[1,2,1],[0,0,0],[-1,-2,-1]]))
 
 #define kernel for all computations done in hcl
 def kernel(data, Gx, Gy):
-	newdata =  hcl.compute((width, height), lambda x,y: data[x][y][0] + data[x][y][1] + data[x][y][2], "newdata", dtype=hcl.Float()) 
+	newdata =  hcl.compute((height, width), lambda x,y: data[x][y][0] + data[x][y][1] + data[x][y][2], "newdata", dtype=hcl.Float()) 
 	r = hcl.reduce_axis(0,3)
 	c = hcl.reduce_axis(0,3)
-	Gxresult = hcl.compute((width-2, height-2), lambda x,y: hcl.sum(newdata[x+r, y+c]*Gx[r,c], axis=[r,c]), "Gxresult", dtype=hcl.Float())
+	Gxresult = hcl.compute((height-2, width-2), lambda x,y: hcl.sum(newdata[x+r, y+c]*Gx[r,c], axis=[r,c]), "Gxresult", dtype=hcl.Float())
 	t = hcl.reduce_axis(0,3)
 	g = hcl.reduce_axis(0,3)
-	Gyresult = hcl.compute((width-2, height-2), lambda x,y: hcl.sum(newdata[x+t, y+g]*Gy[t,g], axis=[t,g]), "Gyresult", dtype=hcl.Float())
-	return hcl.compute((width-2, height-2), lambda x,y: hcl.sqrt((Gxresult[x][y]*Gxresult[x][y])+(Gyresult[x][y]*Gyresult[x][y]))/4328*255, dtype=hcl.Float())
+	Gyresult = hcl.compute((height-2, width-2), lambda x,y: hcl.sum(newdata[x+t, y+g]*Gy[t,g], axis=[t,g]), "Gyresult", dtype=hcl.Float())
+	return hcl.compute((height-2, width-2), lambda x,y: hcl.sqrt((Gxresult[x][y]*Gxresult[x][y])+(Gyresult[x][y]*Gyresult[x][y]))/4328*255, dtype=hcl.Float())
 
 #create schedule and function
 sched = hcl.create_schedule([data, Gx, Gy], kernel)
 func = hcl.build(sched)
 
 #need to define output array as an hcl array
-length = hcl.asarray(np.zeros((width-2, height-2)) ,dtype=hcl.Float())
+length = hcl.asarray(np.zeros((height-2, width-2)) ,dtype=hcl.Float())
 
 #run the function
 func(imgdata, Gxdata, Gydata, length)
@@ -52,13 +52,13 @@ func(imgdata, Gxdata, Gydata, length)
 newlength = length.asnumpy().astype(int)
 
 #define array for image
-newimgarry = np.zeros((width-2,height-2,3))
+newimgarry = np.zeros((height-2, width-2, 3))
 
 #assign (length, length, length) to each pixel
-for x in range (0, width-2):
-	for y in range (0, height-2):
+for x in range (0, height-2):
+	for y in range (0, width-2):
 		for z in range (0, 3):
 			newimgarry[x,y,z] = newlength[x,y]
 
 #create an image with the array
-misc.imsave('spongebob_fixed.png', newimgarry)
+misc.imsave('lane_fixed.png', newimgarry)
