@@ -1,0 +1,27 @@
+Confusing things while working on this project:
+
+1. The whole structure of how to use hcl.
+I think it would be helpful if there was a seciton in getting started that has a diagram or sample code of just
+
+hcl.init()
+placeholders
+(hcl.asarray)
+define kernel
+create schedule
+build schedule
+run the built thing
+
+and to specify that you have to put in an hcl structure for output into running the built thing.
+The idea of putting in placeholders for create schedule and actually putting in the real data for running was confusing.
+
+2. Datatype for placeholder, init, compute
+I forgot to specify float for all, so it might be good to mention to be careful with type declaration
+
+3. for loop range for Python
+People without much Python experience might think for(0,3) includes 3... if people who will use HCL might not have
+used Python much, maybe worth including?
+
+4. Defining kernel
+When you define the kernel, does the variable name need to be the same as the placeholders you will use later for creating schedule?
+I think some examples on the website does that and I wasn't sure if it was necessary. If not necessary, it might be good to make them
+different names on the website examples just to clarify that.
