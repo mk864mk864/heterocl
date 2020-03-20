@@ -5,7 +5,8 @@ from PIL import Image
 import math
 import os
 import numpy as np
-from scipy import misc
+import imageio
+import time
 
 #need to initiate hcl
 hcl.init(init_dtype=hcl.Float())
@@ -23,7 +24,7 @@ Gy = hcl.placeholder((3,3), "Gy", dtype=hcl.Float())
 path = 'lane.png'#'spongebob.png'
 
 #need to convert all input data to hcl arrays
-imgdata = hcl.asarray(np.asarray(misc.imread(path)))
+imgdata = hcl.asarray(np.asarray(imageio.imread(path)))
 Gxdata = hcl.asarray(np.array([[1,0,-1],[2,0,-2],[1,0,-1]]))
 Gydata = hcl.asarray(np.array([[1,2,1],[0,0,0],[-1,-2,-1]]))
 
@@ -61,4 +62,6 @@ for x in range (0, height-2):
 			newimgarry[x,y,z] = newlength[x,y]
 
 #create an image with the array
-misc.imsave('lane_fixed.png', newimgarry)
+imageio.imsave('lane_fixed.png', newimgarry)
+
+print(time.process_time())
