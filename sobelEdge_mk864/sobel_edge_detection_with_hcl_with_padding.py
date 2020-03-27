@@ -12,8 +12,8 @@ import time
 hcl.init(init_dtype=hcl.Float())
 
 #specify width and height of the input image
-height = 900#225
-width = 1200#225
+height = 1080
+width = 1920
 
 #need to define placeholders to define kernel and create schedule
 data = hcl.placeholder((height+2, width+2, 3), "data", dtype=hcl.Float())
@@ -21,7 +21,7 @@ Gx = hcl.placeholder((3,3), "Gx", dtype=hcl.Float())
 Gy = hcl.placeholder((3,3), "Gy", dtype=hcl.Float())
 
 #path to input image
-path = 'lane.png'#'spongebob.png'
+path = '172333.jpg'#'spongebob.png'
 imagewopadding = np.asarray(imageio.imread(path))
 imagewpadding = np.zeros((height+2, width+2, 3))
 
@@ -77,6 +77,6 @@ for x in range (0, height):
 			newimgarry[x,y,z] = newlength[x,y]
 
 #create an image with the array
-imageio.imsave('lane_fixed.png', newimgarry)
+imageio.imsave('172333_fixed.png', newimgarry)
 
 print(time.process_time())

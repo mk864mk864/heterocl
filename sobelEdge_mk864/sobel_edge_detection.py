@@ -6,10 +6,10 @@ import os
 import numpy as np
 import time
 
-width = 1200
-height = 900
+width = 1920
+height = 1080
 
-path = 'lane.jpg'
+path = '172333.jpg'
 img = Image.open(path)
 newimg = Image.new("RGB", (width,height), "white")
 
@@ -89,6 +89,6 @@ for x in range (1,width-1):
 
 
 
-newimg.save("lane_fixed.jpg")
+newimg.save("172333_fixed.jpg")
 
 print(time.process_time())
